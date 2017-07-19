@@ -7,6 +7,7 @@
     tools:context="com.corgihat.iot.test01.MainActivity">
 
     <TextView
+        android:id="@+id/messageArea"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/waiting"

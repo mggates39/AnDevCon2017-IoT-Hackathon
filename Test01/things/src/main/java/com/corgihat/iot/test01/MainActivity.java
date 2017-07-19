@@ -8,7 +8,9 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.TextView;
 
+import com.corgihat.iot.test01.models.Message;
 import com.google.android.things.contrib.driver.apa102.Apa102;
 import com.google.android.things.contrib.driver.bmx280.Bmx280SensorDriver;
 import com.google.android.things.contrib.driver.button.Button;
@@ -59,12 +61,16 @@ public class MainActivity extends Activity {
 
     private String lastMessage;
 
+    private TextView messageDisplay;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.d(TAG, "Started Message Display");
 
         setContentView(R.layout.activity_main);
+
+        messageDisplay =  (TextView) findViewById(R.id.messageArea);
 
         try {
             mDisplay = new AlphanumericDisplay(BoardDefaults.getI2cBus());
@@ -105,7 +111,7 @@ public class MainActivity extends Activity {
                 String value = dataSnapshot.getValue(String.class);
                 Log.d(TAG, "Value is: " + value);
                 lastMessage = value;
-                getLastMessage(value.substring(value.length()-4));
+                getLastMessage(value);
             }
 
             @Override
@@ -117,11 +123,41 @@ public class MainActivity extends Activity {
     }
 
     private void getLastMessage(String messageNumber) {
+        ValueEventListener messageListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                // Get Post object and use the values to update the UI
+                Message message = dataSnapshot.getValue(Message.class);
+                //
+                try {
+                    messageDisplay.setText(message.message);
+                    if (message.urgent) {
+                        stripOn();
+                    } else {
+                        stripOff();
+                    }
+                } catch (Exception e) {
+                    stripOff();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Getting Post failed, log a message
+                Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
+
+            }
+        };
+
         if (!messageNumber.equals("0")) {
             updateDisplay("MSG");
+            DatabaseReference messageRef = database.getReference("messages").child(messageNumber);
+            messageRef.addValueEventListener(messageListener);
 
         } else {
             updateDisplay("");
+            messageDisplay.setText(R.string.waiting);
+            stripOff();
         }
     }
 
@@ -134,6 +170,33 @@ public class MainActivity extends Activity {
             }
         }
     }
+
+    protected void stripOn()
+    {
+        if (mLedstrip != null) {
+            try {
+                mLedstrip.write(mRed);
+                mLedstrip.setBrightness(LEDSTRIP_BRIGHTNESS);
+                Log.d( TAG,"Strip On");
+            } catch (IOException e) {
+                Log.e(TAG, "Error setting ledstrip", e);
+            }
+        }
+    }
+
+    protected void stripOff()
+    {
+        if (mLedstrip != null) {
+            try {
+                mLedstrip.write(new int[7]);
+                mLedstrip.setBrightness(0);
+                Log.d( TAG,"Strip Off");
+            } catch (IOException e) {
+                Log.e(TAG, "Error setting ledstrip", e);
+            }
+        }
+    }
+
 
     @Override
     protected void onDestroy() {
