@@ -31,4 +31,7 @@
     <string name="user_name_placeholder">User: %1$s</string>
     <string name="user_saved">User Saved</string>
 
+    <!-- Strings related to new message -->
+    <string name="message">New Message</string>
+    <string name="isUrgent">Urgent</string>
 </resources>
