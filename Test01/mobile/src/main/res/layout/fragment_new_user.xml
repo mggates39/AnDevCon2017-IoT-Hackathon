@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="org.wvcag.unifycwv.NewUserActivityFragment"
+    tools:showIn="@layout/activity_new_user">
+
+    <TextView
+        android:id="@+id/textUserName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        android:textSize="18sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        tools:layout_constraintBaseline_creator="1"
+        tools:layout_constraintLeft_creator="1" />
+
+    <TextView
+        android:id="@+id/textUserEmail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        android:textSize="18sp"
+        app:layout_constraintLeft_toLeftOf="@+id/textUserName"
+        app:layout_constraintTop_toBottomOf="@+id/textUserName"
+        tools:layout_constraintTop_creator="1"
+        android:layout_marginLeft="0dp"
+        android:layout_marginTop="20dp" />
+
+    <EditText
+        android:id="@+id/editUserFullName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="@string/user_full_name"
+        app:layout_constraintLeft_toLeftOf="@+id/textUserEmail"
+        tools:layout_constraintTop_creator="1"
+        android:layout_marginLeft="0dp"
+        android:layout_marginTop="20dp"
+        app:layout_constraintTop_toBottomOf="@+id/textUserEmail" />
+
+    <EditText
+        android:id="@+id/editUserPhone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="phone"
+        android:text="@string/user_phone"
+        app:layout_constraintLeft_toLeftOf="@+id/editUserFullName"
+        tools:layout_constraintTop_creator="1"
+        app:layout_constraintTop_toBottomOf="@+id/editUserFullName"
+        android:layout_marginLeft="0dp"
+        android:layout_marginTop="20dp" />
+
+
+</android.support.constraint.ConstraintLayout>

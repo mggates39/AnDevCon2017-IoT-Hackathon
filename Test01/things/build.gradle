@@ -1,0 +1,41 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 26
+    buildToolsVersion "25.0.3"
+    defaultConfig {
+        applicationId "com.corgihat.iot.test01"
+        minSdkVersion 24
+        targetSdkVersion 26
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    compileOnly 'com.google.android.things:androidthings:+'
+
+    compile 'com.google.android.things.contrib:driver-button:0.3'
+    compile 'com.google.android.things.contrib:driver-bmx280:0.2'
+    compile 'com.google.android.things.contrib:driver-ht16k33:0.3'
+    compile 'com.google.android.things.contrib:driver-apa102:0.3'
+    compile 'com.google.android.things.contrib:driver-pwmspeaker:0.2'
+
+    testImplementation 'junit:junit:4.12'
+    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
+    implementation 'com.google.firebase:firebase-database:11.0.2'
+}
+
+
+apply plugin: 'com.google.gms.google-services'
