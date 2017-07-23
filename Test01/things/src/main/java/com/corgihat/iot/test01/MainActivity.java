@@ -53,8 +53,8 @@ public class MainActivity extends Activity {
     private AlphanumericDisplay mDisplay;
 
     private Apa102 mLedstrip;
-    private int[] mRed = new int[7];
-    private int[] mRainbow = new int[7];
+    public int[] mRed = new int[7];
+    public int[] mRainbow = new int[7];
     private static final int LEDSTRIP_BRIGHTNESS = 1;
 
     public FirebaseDatabase database;
@@ -95,7 +95,11 @@ public class MainActivity extends Activity {
                 float[] hsv = {i * 360.f / mRainbow.length, 1.0f, 1.0f};
                 mRainbow[i] = Color.HSVToColor(255, hsv);
             }
+
+            Log.d(TAG, "Initialized Led Strip");
         } catch (IOException e) {
+            Log.e(TAG, "Error initializing Led Strip", e);
+            Log.d(TAG, "Led Strip disabled");
             mLedstrip = null; // Led strip is optional.
         }
 
@@ -131,13 +135,15 @@ public class MainActivity extends Activity {
                 //
                 try {
                     messageDisplay.setText(message.message);
+
                     if (message.urgent) {
                         stripOn();
                     } else {
                         stripOff();
+
                     }
                 } catch (Exception e) {
-                    stripOff();
+                    //stripOff();
                 }
             }
 
@@ -152,7 +158,7 @@ public class MainActivity extends Activity {
         if (!messageNumber.equals("0")) {
             updateDisplay("MSG");
             DatabaseReference messageRef = database.getReference("messages").child(messageNumber);
-            messageRef.addValueEventListener(messageListener);
+            messageRef.addListenerForSingleValueEvent(messageListener);
 
         } else {
             updateDisplay("");
@@ -173,10 +179,12 @@ public class MainActivity extends Activity {
 
     protected void stripOn()
     {
-        if (mLedstrip != null) {
+        if (mLedstrip == null) {
+            return;
+        } else {
             try {
                 mLedstrip.write(mRed);
-                mLedstrip.setBrightness(LEDSTRIP_BRIGHTNESS);
+                mLedstrip.write(mRed);
                 Log.d( TAG,"Strip On");
             } catch (IOException e) {
                 Log.e(TAG, "Error setting ledstrip", e);
@@ -186,10 +194,12 @@ public class MainActivity extends Activity {
 
     protected void stripOff()
     {
-        if (mLedstrip != null) {
+        if (mLedstrip == null) {
+            return;
+        } else {
             try {
                 mLedstrip.write(new int[7]);
-                mLedstrip.setBrightness(0);
+                mLedstrip.write(new int[7]);
                 Log.d( TAG,"Strip Off");
             } catch (IOException e) {
                 Log.e(TAG, "Error setting ledstrip", e);
@@ -211,6 +221,7 @@ public class MainActivity extends Activity {
                 Log.e(TAG, "Error disabling ledstrip", e);
             } finally {
                 mLedstrip = null;
+                Log.d( TAG,"Led Strip shutdown");
             }
         }
 
@@ -223,6 +234,7 @@ public class MainActivity extends Activity {
                 Log.e(TAG, "Error disabling display", e);
             } finally {
                 mDisplay = null;
+                Log.d( TAG,"display shutdown");
             }
         }
 
