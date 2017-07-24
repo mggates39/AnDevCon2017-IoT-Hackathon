@@ -61,6 +61,8 @@ public class MainActivity extends Activity {
 
     private String lastMessage;
 
+    private TextView toDisplay;
+    private TextView fromDisplay;
     private TextView messageDisplay;
 
     @Override
@@ -71,6 +73,8 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
 
         messageDisplay =  (TextView) findViewById(R.id.messageArea);
+        toDisplay =  (TextView) findViewById(R.id.toArea);
+        fromDisplay =  (TextView) findViewById(R.id.fromArea);
 
         try {
             mDisplay = new AlphanumericDisplay(BoardDefaults.getI2cBus());
@@ -134,6 +138,8 @@ public class MainActivity extends Activity {
                 Message message = dataSnapshot.getValue(Message.class);
                 //
                 try {
+                    toDisplay.setText(message.to);
+                    fromDisplay.setText(message.from);
                     messageDisplay.setText(message.message);
 
                     if (message.urgent) {
@@ -162,6 +168,8 @@ public class MainActivity extends Activity {
 
         } else {
             updateDisplay("");
+            toDisplay.setText("");
+            fromDisplay.setText("");
             messageDisplay.setText(R.string.waiting);
             stripOff();
         }

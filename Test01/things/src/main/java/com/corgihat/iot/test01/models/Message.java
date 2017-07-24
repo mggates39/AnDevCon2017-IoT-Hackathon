@@ -11,15 +11,19 @@ import com.google.firebase.database.IgnoreExtraProperties;
 public class Message {
     public String uid;
     public String message;
+    public String to;
+    public String from;
     public boolean urgent;
 
     public Message() {
         // Default constructor required for calls to DataSnapshot.getValue(Message.class)
     }
 
-    public Message(String uid, String message, boolean urgent) {
+    public Message(String uid, String message, String to, String from, boolean urgent) {
         this.uid = uid;
         this.message = message;
+        this.to = to;
+        this.from = from;
         this.urgent = urgent;
     }
 }
